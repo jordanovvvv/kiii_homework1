@@ -1,2 +1,2 @@
-FROM nginx:stable
-
+FROM alpine
+CMD ["echo", "Hello world!"]
