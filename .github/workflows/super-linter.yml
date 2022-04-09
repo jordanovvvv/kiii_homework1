@@ -9,44 +9,41 @@ name: Lint, Docker Build and Push to DockerHub
 # Start the job on all push #
 #############################
 on:
+  # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    # branches-ignore: [master, main]
-    # Remove the line above to run when pushing to master
+    branches: [ main ]
   pull_request:
-    branches: [master, main]
+    branches: [ main ]
 
-###############
-# Set the Job #
-###############
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  # This workflow contains a single job called "build"
   linter:
-    # Name the Job
-    name: Lint Code Base - Build Job
-    # Set the agent to run on
+    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    ##################
-    # Load all steps #
-    ##################
+    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      ##########################
-      # Checkout the code base #
-      ##########################
-      - name: Checkout Code
-        uses: actions/checkout@v3
-        with:
-          # Full git history is needed to get a proper list of changed files within `super-linter`
-          fetch-depth: 0
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
 
-      ################################
-      # Run Linter against code base #
-      ################################
-      - name: Lint Code Base
-        uses: github/super-linter@v4
-        env:
-          VALIDATE_ALL_CODEBASE: false
-          DEFAULT_BRANCH: main
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Runs a single command using the runners shell
+      - name: Run a one-line script
+        run: echo Hello, world!
+
+      # Runs a set of commands using the runners shell
+      - name: Run a multi-line script
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
+          
+      # Run Super-Linter
+      - name: Super-Linter
+        uses: github/super-linter@v4.9.2
+
           
   docker:
     needs: linter
